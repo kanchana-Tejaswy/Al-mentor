@@ -16,3 +16,14 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+export const chatRequestSchema = z.object({
+  message: z.string(),
+  sessionId: z.string().optional(),
+});
+
+export type ChatRequest = z.infer<typeof chatRequestSchema>;
+
+export interface ChatResponse {
+  response: string;
+}
