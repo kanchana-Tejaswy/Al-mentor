@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/hooks/use-chat-store";
 import { User } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface MessageBubbleProps {
   message: Message;
@@ -46,8 +47,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             ? "bg-gradient-to-br from-[#ff7a18] to-[#d65f0e] text-white rounded-2xl rounded-tr-sm box-glow"
             : "bg-[#111113] border border-white/5 text-gray-200 rounded-2xl rounded-tl-sm"
         )}>
-          {/* Markdown rendering could go here in the future, for now using whitespace pre-wrap */}
-          <div className="whitespace-pre-wrap font-sans">{message.content}</div>
+          <div className="prose prose-invert max-w-none text-sm [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_strong]:font-bold [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-orange-300 [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_li]:my-0.5 [&_p]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/50 [&_blockquote]:pl-3 [&_blockquote]:italic">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          </div>
         </div>
         <span className="text-[10px] text-muted-foreground/60 px-1 font-medium tracking-wider uppercase">
           {format(message.createdAt, "h:mm a")}
