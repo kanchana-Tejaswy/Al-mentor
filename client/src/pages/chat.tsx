@@ -5,7 +5,6 @@ import { Sidebar } from "@/components/chat/sidebar";
 import { MessageBubble } from "@/components/chat/message-bubble";
 import { TypingIndicator } from "@/components/chat/typing-indicator";
 import { WelcomeScreen } from "@/components/chat/welcome-screen";
-import { VoiceAgent } from "@/components/chat/voice-agent";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { useChatApi } from "@/hooks/use-chat";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -111,34 +110,28 @@ export function Chat() {
 
       <div className="flex-1 flex flex-col relative min-w-0">
         {/* Header */}
-        <header className="h-14 flex-shrink-0 flex items-center justify-between px-3 md:px-6 relative z-10">
+        <header className="h-14 flex-shrink-0 flex items-center px-3 md:px-6 relative z-10">
           <div className="absolute inset-0 bg-[#000000]/80 backdrop-blur-xl border-b border-white/5"></div>
           <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
           
-          <div className="relative z-10 flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Toggle sidebar"
-              data-testid="button-toggle-sidebar"
-            >
-              {sidebarOpen ? (
-                <X className="w-5 h-5 text-orange-500" />
-              ) : (
-                <Menu className="w-5 h-5 text-gray-400" />
-              )}
-            </button>
-            
-            <h2 className="font-display font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-orange-500 box-glow inline-block" />
-              <span className="hidden sm:inline">UiPath AI Mentor</span>
-              <span className="sm:hidden text-xs">UiPath</span>
-            </h2>
-          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="md:hidden relative z-10 p-2 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Toggle sidebar"
+            data-testid="button-toggle-sidebar"
+          >
+            {sidebarOpen ? (
+              <X className="w-5 h-5 text-orange-500" />
+            ) : (
+              <Menu className="w-5 h-5 text-gray-400" />
+            )}
+          </button>
           
-          <div className="relative z-10">
-            <VoiceAgent disabled={isPending} />
-          </div>
+          <h2 className="relative z-10 font-display font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 flex items-center gap-2 ml-2 md:ml-0">
+            <span className="w-2 h-2 rounded-full bg-orange-500 box-glow inline-block" />
+            <span className="hidden sm:inline">UiPath AI Mentor</span>
+            <span className="sm:hidden text-xs">UiPath</span>
+          </h2>
         </header>
 
         {/* Messages Area */}
