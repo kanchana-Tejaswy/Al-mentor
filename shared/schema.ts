@@ -18,7 +18,7 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
 export const chatRequestSchema = z.object({
-  message: z.string(),
+  message: z.string().min(1, "Message cannot be empty").trim(),
   sessionId: z.string().optional(),
 });
 

@@ -3,11 +3,10 @@ import type { Server } from "http";
 import { api } from "@shared/routes";
 import { z } from "zod";
 
-// IMPORTANT EDITABLE SECTIONS
-// You can edit these values below to point to a different agent or update keys
-const PASTE_LYZER_AGENT_LINK_HERE = "https://agent-prod.studio.lyzr.ai/v3/inference/chat/";
-const PASTE_API_KEY_HERE = "sk-default-ZpmsmRk4lj8vmpme6G9Q7tpsRnZKit2A";
-const PASTE_LYZER_AGENT_CODE_HERE = "69ad5a416cc24db68fc34132"; // Agent ID
+const LYZER_API_URL = process.env.LYZER_API_URL || "https://agent-prod.studio.lyzr.ai/v3/inference/chat/";
+const LYZER_API_KEY = process.env.LYZER_API_KEY || "sk-default-ZpmsmRk4lj8vmpme6G9Q7tpsRnZKit2A";
+const LYZER_AGENT_ID = process.env.LYZER_AGENT_ID || "69ad5a416cc24db68fc34132";
+const API_TIMEOUT_MS = 30000;
 
 export async function registerRoutes(
   httpServer: Server,
@@ -19,22 +18,26 @@ export async function registerRoutes(
       const input = api.chat.send.input.parse(req.body);
       
       const payload = {
-        user_id: "mail2tejaswy@gmail.com", 
-        agent_id: PASTE_LYZER_AGENT_CODE_HERE,
-        session_id: input.sessionId || `${PASTE_LYZER_AGENT_CODE_HERE}-default-session`,
+        user_id: process.env.USER_ID || "default-user",
+        agent_id: LYZER_AGENT_ID,
+        session_id: input.sessionId || `${LYZER_AGENT_ID}-default-session`,
         message: input.message
       };
 
       console.log("Sending to Lyzer API:", payload);
 
-      const lyzerResponse = await fetch(PASTE_LYZER_AGENT_LINK_HERE, {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
+      const lyzerResponse = await fetch(LYZER_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": PASTE_API_KEY_HERE
+          "x-api-key": LYZER_API_KEY
         },
-        body: JSON.stringify(payload)
-      });
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      }).finally(() => clearTimeout(timeout));
 
       if (!lyzerResponse.ok) {
         const errorText = await lyzerResponse.text();
@@ -55,10 +58,31 @@ export async function registerRoutes(
         return res.status(400).json({
           message: err.errors[0].message,
           field: err.errors[0].path.join('.'),
+          code: "VALIDATION_ERROR"
         });
       }
+      
+      const errorMessage = err instanceof Error ? err.message : String(err);
       console.error("Chat proxy error:", err);
-      res.status(500).json({ message: "Internal server error" });
+      
+      if (errorMessage.includes("AbortError") || errorMessage.includes("timeout")) {
+        return res.status(504).json({ 
+          message: "AI Mentor is taking too long. Please try again.",
+          code: "TIMEOUT_ERROR"
+        });
+      }
+      
+      if (errorMessage.includes("Lyzer API error")) {
+        return res.status(502).json({ 
+          message: "AI service temporarily unavailable. Please try again.",
+          code: "EXTERNAL_API_ERROR"
+        });
+      }
+      
+      res.status(500).json({ 
+        message: "Something went wrong. Please try again.",
+        code: "INTERNAL_SERVER_ERROR"
+      });
     }
   });
 

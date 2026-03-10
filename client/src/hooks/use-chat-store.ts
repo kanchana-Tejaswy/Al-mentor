@@ -37,14 +37,53 @@ export function useChatStore() {
     }
   });
 
+  const saveToStorage = useCallback((data: Conversation[]) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (err) {
+      if (err instanceof Error && err.name === 'QuotaExceededError') {
+        console.error('Local storage quota exceeded. Consider clearing old conversations.');
+        alert('Chat history storage is full. Your recent messages may not be saved.');
+      } else {
+        console.error('Failed to save conversations to storage:', err);
+      }
+    }
+  }, []);
+
   // Persist to local storage
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
-  }, [conversations]);
+    saveToStorage(conversations);
+  }, [conversations, saveToStorage]);
 
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}-active`, JSON.stringify(activeId));
+    try {
+      localStorage.setItem(`${STORAGE_KEY}-active`, JSON.stringify(activeId));
+    } catch (err) {
+      console.error('Failed to save active conversation ID:', err);
+    }
   }, [activeId]);
+
+  // Sync across tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY && e.newValue) {
+        try {
+          setConversations(JSON.parse(e.newValue));
+        } catch (err) {
+          console.error('Failed to sync conversations from other tab:', err);
+        }
+      } else if (e.key === `${STORAGE_KEY}-active` && e.newValue) {
+        try {
+          setActiveId(JSON.parse(e.newValue));
+        } catch (err) {
+          console.error('Failed to sync active conversation from other tab:', err);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const createConversation = useCallback(() => {
     const newId = nanoid();

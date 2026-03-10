@@ -29,10 +29,17 @@ export function Chat() {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim() || isPending) return;
+    const trimmedInput = input.trim();
+    if (!trimmedInput || isPending) return;
 
-    const messageText = input.trim();
+    const messageText = trimmedInput;
     setInput("");
+
+    if (messageText.length > 5000) {
+      alert("Message is too long. Please keep it under 5000 characters.");
+      setInput(messageText);
+      return;
+    }
 
     // Ensure we have an active conversation before sending
     let currentConvId = store.activeId;
@@ -53,8 +60,20 @@ export function Chat() {
       // Add AI response to local state
       store.addMessage(currentConvId, 'ai', response.response);
     } catch (err) {
-      console.error(err);
-      store.addMessage(currentConvId, 'ai', "⚠️ I'm sorry, I encountered an error while processing your request. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      console.error("Error sending message:", err);
+      
+      let userMessage = "⚠️ I'm sorry, something went wrong. Please try again.";
+      
+      if (errorMessage.includes("timeout") || errorMessage.includes("taking too long")) {
+        userMessage = "⏱️ The AI Mentor is taking too long to respond. Please try a shorter question.";
+      } else if (errorMessage.includes("temporarily unavailable")) {
+        userMessage = "🔄 The AI service is temporarily unavailable. Please try again in a moment.";
+      } else if (errorMessage.includes("empty")) {
+        userMessage = "📝 Please enter a message before sending.";
+      }
+      
+      store.addMessage(currentConvId, 'ai', userMessage);
     }
   };
 
