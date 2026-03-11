@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, CornerDownLeft, Menu, X } from "lucide-react";
+import { Send, CornerDownLeft, Menu, X, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "@/components/chat/sidebar";
 import { MessageBubble } from "@/components/chat/message-bubble";
@@ -7,11 +7,13 @@ import { TypingIndicator } from "@/components/chat/typing-indicator";
 import { WelcomeScreen } from "@/components/chat/welcome-screen";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { useChatApi } from "@/hooks/use-chat";
+import { useTheme } from "@/hooks/use-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Chat() {
   const store = useChatStore();
   const { mutateAsync: sendMessage, isPending } = useChatApi();
+  const { theme, toggleTheme } = useTheme();
   const isMobile = useIsMobile();
   
   const [input, setInput] = useState("");
@@ -84,7 +86,7 @@ export function Chat() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#000000] text-foreground overflow-hidden font-sans">
+    <div className="flex h-screen w-full bg-background text-foreground overflow-hidden font-sans transition-colors duration-300">
       <AnimatePresence>
         {sidebarOpen && isMobile && (
           <motion.div
@@ -121,28 +123,49 @@ export function Chat() {
       </motion.div>
 
       <div className="flex-1 flex flex-col relative min-w-0">
-        <header className="h-14 flex-shrink-0 flex items-center px-3 md:px-6 relative z-10">
-          <div className="absolute inset-0 bg-[#000000]/80 backdrop-blur-xl border-b border-white/5"></div>
-          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
+        <header className="h-14 flex-shrink-0 flex items-center justify-between px-3 md:px-6 relative z-10">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-b border-border transition-colors duration-300"></div>
+          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
           
+          <div className="flex items-center gap-2 relative z-10">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 hover:bg-primary/10 rounded-lg transition-colors text-primary"
+              aria-label="Toggle sidebar"
+              data-testid="button-toggle-sidebar"
+            >
+              {sidebarOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+            
+            <h2 className="font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary flex items-center gap-2 ml-1 md:ml-0">
+              <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+              <span className="hidden sm:inline">UiPath AI Mentor</span>
+              <span className="sm:hidden text-xs">UiPath</span>
+            </h2>
+          </div>
+
           <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden relative z-10 p-2 hover:bg-white/10 rounded-lg transition-colors"
-            aria-label="Toggle sidebar"
-            data-testid="button-toggle-sidebar"
+            onClick={toggleTheme}
+            className="relative z-10 p-2 hover:bg-primary/10 rounded-lg transition-all duration-300 text-primary"
+            aria-label="Toggle theme"
+            data-testid="button-toggle-theme"
           >
-            {sidebarOpen ? (
-              <X className="w-5 h-5 text-orange-500" />
-            ) : (
-              <Menu className="w-5 h-5 text-gray-400" />
-            )}
+            <motion.div
+              initial={false}
+              animate={{ rotate: theme === 'dark' ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </motion.div>
           </button>
-          
-          <h2 className="relative z-10 font-display font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 flex items-center gap-2 ml-2 md:ml-0">
-            <span className="w-2 h-2 rounded-full bg-orange-500 box-glow inline-block" />
-            <span className="hidden sm:inline">UiPath AI Mentor</span>
-            <span className="sm:hidden text-xs">UiPath</span>
-          </h2>
         </header>
 
         <div className="flex-1 overflow-y-auto no-scrollbar relative scroll-smooth">
@@ -163,7 +186,7 @@ export function Chat() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full p-3 md:p-6 bg-gradient-to-t from-[#000000] via-[#000000]/90 to-transparent pt-8 md:pt-12">
+        <div className="absolute bottom-0 left-0 w-full p-3 md:p-6 bg-gradient-to-t from-background via-background/95 to-transparent pt-8 md:pt-12 transition-colors duration-300">
           <div className="max-w-4xl mx-auto relative group">
             <form onSubmit={handleSubmit} className="relative">
               <textarea
@@ -171,10 +194,10 @@ export function Chat() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask anything about UiPath..."
-                className="w-full bg-[#111113]/80 backdrop-blur-md border border-white/10 rounded-2xl pl-4 md:pl-5 pr-12 md:pr-14 py-3 md:py-4 text-sm md:text-base 
-                           text-white placeholder:text-gray-500 resize-none h-[50px] md:h-[60px] max-h-[200px] 
-                           focus:outline-none focus:ring-1 focus:ring-orange-500/50 focus:border-orange-500/50 
-                           transition-all shadow-lg shadow-black/50 hover:border-white/20 no-scrollbar"
+                className="w-full bg-input/60 backdrop-blur-md border border-border rounded-2xl pl-4 md:pl-5 pr-12 md:pr-14 py-3 md:py-4 text-sm md:text-base 
+                           text-foreground placeholder:text-muted-foreground/50 resize-none h-[50px] md:h-[60px] max-h-[200px] 
+                           focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 
+                           transition-all shadow-lg shadow-primary/5 hover:border-border/70 no-scrollbar"
                 rows={1}
                 data-testid="input-message"
               />
@@ -182,9 +205,9 @@ export function Chat() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isPending}
-                  className="w-10 h-10 md:w-[44px] md:h-[44px] rounded-xl flex items-center justify-center bg-orange-500 text-white 
-                             shadow-[0_0_15px_rgba(255,122,24,0.3)] hover:shadow-[0_0_25px_rgba(255,122,24,0.5)] 
-                             hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:shadow-[0_0_15px_rgba(255,122,24,0.3)]
+                  className="w-10 h-10 md:w-[44px] md:h-[44px] rounded-xl flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-primary-foreground 
+                             shadow-[0_0_20px_var(--primary-glow,rgba(139,92,246,0.3))] hover:shadow-[0_0_30px_var(--primary-glow,rgba(139,92,246,0.5))] 
+                             hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:shadow-[0_0_20px_var(--primary-glow,rgba(139,92,246,0.3))]
                              disabled:hover:translate-y-0 transition-all duration-200"
                   data-testid="button-send"
                 >
@@ -194,7 +217,7 @@ export function Chat() {
             </form>
             <div className="text-center mt-2 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/60 hidden sm:flex">
               <span>Press</span>
-              <kbd className="px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 font-sans text-[10px] flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 rounded-md bg-muted/40 border border-border font-sans text-[10px] flex items-center gap-1 transition-colors duration-300">
                 Enter <CornerDownLeft className="w-3 h-3" />
               </kbd>
               <span>to send</span>

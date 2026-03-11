@@ -14,12 +14,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }} className={cn("flex gap-4 max-w-[85%]", isUser ? "ml-auto flex-row-reverse" : "mr-auto")}>
-      <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg", isUser ? "bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-500/20" : "bg-white/5 border border-white/10")}>
-        {isUser ? <User className="w-4 h-4 text-white" /> : <span className="text-xs font-bold text-orange-500">AI</span>}
+      <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg", isUser ? "bg-gradient-to-br from-primary to-secondary shadow-primary/30" : "bg-muted border border-border")}>
+        {isUser ? <User className="w-4 h-4 text-primary-foreground" /> : <span className="text-xs font-bold text-primary">AI</span>}
       </div>
       <div className={cn("flex flex-col gap-1.5", isUser ? "items-end" : "items-start")}>
-        <div className={cn("px-5 py-3.5 text-[0.95rem] leading-relaxed relative group", isUser ? "bg-gradient-to-br from-[#ff7a18] to-[#d65f0e] text-white rounded-2xl rounded-tr-sm box-glow" : "bg-[#111113] border border-white/5 text-gray-200 rounded-2xl rounded-tl-sm")}>
-          <div className="prose prose-invert max-w-none text-sm [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_strong]:font-bold [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-orange-300 [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_li]:my-0.5 [&_p]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/50 [&_blockquote]:pl-3 [&_blockquote]:italic">
+        <div className={cn("px-5 py-3.5 text-[0.95rem] leading-relaxed relative group", isUser ? "bg-gradient-to-br from-primary to-secondary text-primary-foreground rounded-2xl rounded-tr-sm shadow-[0_0_15px_var(--primary-glow,rgba(139,92,246,0.2))]" : "bg-card border border-border text-foreground rounded-2xl rounded-tl-sm")}>
+          <div className={cn("prose max-w-none text-sm [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_strong]:font-bold [&_em]:italic [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_li]:my-0.5 [&_p]:my-1", isUser ? "prose-invert [&_code]:bg-white/20 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_blockquote]:border-l-2 [&_blockquote]:border-primary/50 [&_blockquote]:pl-3 [&_blockquote]:italic" : "dark:prose-invert [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-primary [&_blockquote]:border-l-2 [&_blockquote]:border-primary/50 [&_blockquote]:pl-3 [&_blockquote]:italic")}>
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
         </div>

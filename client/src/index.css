@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,27 +9,58 @@
     --font-sans: 'Inter', sans-serif;
     --font-display: 'Outfit', sans-serif;
 
-    /* Base Colors - Deep Charcoal/Black */
+    /* Light Mode Colors */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 10%;
+    
+    --card: 0 0% 98%;
+    --card-foreground: 240 10% 10%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+    
+    --primary: 265 90% 62%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 280 85% 58%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 240 10% 85%;
+    --muted-foreground: 240 5% 45%;
+    
+    --accent: 265 90% 62%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 10% 90%;
+    --input: 240 10% 95%;
+    --ring: 265 90% 62%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
     --background: 240 10% 4%;
     --foreground: 0 0% 98%;
     
-    --card: 240 10% 6%;
+    --card: 240 10% 8%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 240 10% 6%;
+    --popover: 240 10% 8%;
     --popover-foreground: 0 0% 98%;
     
-    /* Glowing Orange Accent */
-    --primary: 25 100% 55%; 
+    --primary: 270 85% 58%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 240 10% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 280 85% 58%;
+    --secondary-foreground: 0 0% 100%;
     
-    --muted: 240 10% 12%;
+    --muted: 240 10% 25%;
     --muted-foreground: 240 5% 65%;
     
-    --accent: 25 100% 55%;
+    --accent: 270 85% 58%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
@@ -37,15 +68,7 @@
 
     --border: 240 10% 15%;
     --input: 240 10% 15%;
-    --ring: 25 100% 55%;
-
-    --radius: 0.75rem;
-  }
-
-  /* Force dark mode */
-  .dark {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 98%;
+    --ring: 270 85% 58%;
   }
 
   body {
