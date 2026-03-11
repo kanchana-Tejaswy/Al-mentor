@@ -141,10 +141,10 @@ export function Chat() {
               )}
             </button>
             
-            <h2 className="font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary flex items-center gap-2 ml-1 md:ml-0">
-              <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+            <h2 className="font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary flex items-center gap-2 ml-1 md:ml-0 whitespace-nowrap">
+              <span className="w-2 h-2 rounded-full bg-primary inline-block flex-shrink-0" />
               <span className="hidden sm:inline">UiPath AI Mentor</span>
-              <span className="sm:hidden text-xs">UiPath</span>
+              <span className="sm:hidden text-sm font-bold">UiPath</span>
             </h2>
           </div>
 
