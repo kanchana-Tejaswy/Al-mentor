@@ -205,13 +205,13 @@ export function Chat() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isPending}
-                  className="w-10 h-10 md:w-[44px] md:h-[44px] rounded-xl flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-primary-foreground 
-                             shadow-[0_0_20px_var(--primary-glow,rgba(139,92,246,0.3))] hover:shadow-[0_0_30px_var(--primary-glow,rgba(139,92,246,0.5))] 
-                             hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:shadow-[0_0_20px_var(--primary-glow,rgba(139,92,246,0.3))]
-                             disabled:hover:translate-y-0 transition-all duration-200"
+                  className="w-10 h-10 md:w-[48px] md:h-[48px] rounded-lg flex items-center justify-center bg-gradient-to-br from-primary via-orange-500 to-primary text-white 
+                             shadow-[0_0_25px_rgba(255,122,24,0.4)] hover:shadow-[0_0_35px_rgba(255,122,24,0.6)] 
+                             hover:-translate-y-1 active:translate-y-0 disabled:opacity-40 disabled:hover:shadow-[0_0_25px_rgba(255,122,24,0.4)]
+                             disabled:hover:translate-y-0 transition-all duration-200 font-bold"
                   data-testid="button-send"
                 >
-                  <Send className="w-4 h-4 md:w-5 md:h-5 ml-[-2px]" />
+                  <Send className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
             </form>

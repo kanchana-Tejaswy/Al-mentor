@@ -16,8 +16,8 @@ export function Sidebar({ conversations, activeId, onSelect, onNew, onDelete }: 
   return (
     <div className="w-72 border-r border-border bg-card flex flex-col h-full flex-shrink-0 transition-colors duration-300">
       <div className="p-4 flex-shrink-0">
-        <button onClick={onNew} className="w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-medium bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 hover:border-primary/40 transition-all duration-300 group hover:shadow-[0_0_15px_var(--primary-glow,rgba(139,92,246,0.2))]">
-          <Plus className="w-5 h-5 text-gray-400 group-hover:text-orange-500 transition-colors" />
+        <button onClick={onNew} className="w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold bg-gradient-to-r from-primary/20 to-orange-500/20 border border-primary/40 text-primary hover:from-primary/30 hover:to-orange-500/30 hover:border-primary/60 transition-all duration-300 group hover:shadow-[0_0_20px_rgba(255,122,24,0.25)]">
+          <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
           <span>New Chat</span>
         </button>
       </div>
