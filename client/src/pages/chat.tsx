@@ -18,7 +18,7 @@ export function Chat() {
   
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null as HTMLDivElement | null);
 
   useEffect(() => {
     setSidebarOpen(!isMobile);
@@ -174,8 +174,8 @@ export function Chat() {
               <WelcomeScreen />
             ) : (
               <div className="space-y-8 pb-32">
-                {store.activeConversation.messages.map((msg) => (
-                  <MessageBubble key={msg.id} message={msg} />
+                {store.activeConversation.messages.map((msg: any) => (
+                  <MessageBubble message={msg} key={msg.id} />
                 ))}
                 <AnimatePresence>
                   {isPending && <TypingIndicator />}
@@ -191,7 +191,7 @@ export function Chat() {
             <form onSubmit={handleSubmit} className="relative">
               <textarea
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask anything about UiPath..."
                 className="w-full bg-input/60 backdrop-blur-md border border-border rounded-2xl pl-4 md:pl-5 pr-12 md:pr-14 py-3 md:py-4 text-sm md:text-base 

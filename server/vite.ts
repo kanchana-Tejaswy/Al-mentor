@@ -1,14 +1,17 @@
-import { type Express } from "express";
+// using `any` for express/http types to avoid needing @types packages
 import { createServer as createViteServer, createLogger } from "vite";
-import { type Server } from "http";
 import viteConfig from "../vite.config";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { nanoid } from "nanoid";
+
+// __dirname analog for ESM
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const viteLogger = createLogger();
 
-export async function setupVite(server: Server, app: Express) {
+export async function setupVite(server: any, app: any) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { server, path: "/vite-hmr" },
@@ -20,7 +23,7 @@ export async function setupVite(server: Server, app: Express) {
     configFile: false,
     customLogger: {
       ...viteLogger,
-      error: (msg, options) => {
+      error: (msg: string, options: Record<string, any>) => {
         viteLogger.error(msg, options);
         process.exit(1);
       },
@@ -31,12 +34,12 @@ export async function setupVite(server: Server, app: Express) {
 
   app.use(vite.middlewares);
 
-  app.use("/{*path}", async (req, res, next) => {
+  app.use("/{*path}", async (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
     const url = req.originalUrl;
 
     try {
       const clientTemplate = path.resolve(
-        import.meta.dirname,
+        __dirname,
         "..",
         "client",
         "index.html",

@@ -7,6 +7,8 @@ import ReactMarkdown from "react-markdown";
 
 interface MessageBubbleProps {
   message: Message;
+  // allow React to pass key through when this component is used in a list
+  key?: string;
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
