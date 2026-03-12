@@ -49,3 +49,36 @@ client UI.
 If you're on macOS/Linux or prefer a different browser simply open the URL
 yourself or adjust the `start <browser>` command in `package.json`.
 
+## Deploying to Netlify
+
+The repo is now oriented for a full-stack Netlify deployment. The client is
+built with Vite into `dist/public`, and the Express API is bundled into a
+single Netlify function (`netlify/functions/server.js`) using `esbuild` and
+`serverless-http`.
+
+1. Ensure the usual environment variables are provided (`DATABASE_URL`,
+   `LYZER_API_KEY`, etc.). You can store them in the Netlify dashboard or a
+   `.env` file when running locally with `netlify dev`.
+2. Netlify will run `npm run build`, which:
+   * builds the React client (`vite build`);
+   * bundles server code for local use (`dist/index.cjs`);
+   * bundles the Netlify function (`netlify/functions/server.js`).
+3. The build command is defined in `netlify.toml`; static assets are published
+   from `dist/public`.
+4. During runtime Netlify sets `process.env.NETLIFY`, so the function skips
+   attempting to serve static files (Netlify does that automatically).
+
+To test locally with Netlify's CLI:
+
+```bash
+npm install -D netlify-cli                 # or globally
+npm run netlify:dev                       # runs the dev server and functions
+```
+
+Your API will be available under `/.netlify/functions/server` and the
+frontend served at `/`.
+
+The project now includes a `netlify.toml` file with the necessary build
+settings, and there's a `netlify:build`/`netlify:dev` script in
+`package.json` for convenience.
+

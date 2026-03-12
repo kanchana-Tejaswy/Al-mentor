@@ -5,6 +5,8 @@
 declare module "fs";
 declare module "path";
 declare module "url";
+declare module "child_process";
+declare module "esbuild";
 
 declare module "http" {
   export type Server = any;
@@ -13,12 +15,20 @@ declare module "http" {
 // express minimal types
 declare namespace Express {
   interface Request { [key: string]: any; }
-  interface Response { [key: string]: any; }
+  interface Response {
+    [key: string]: any;
+    headersSent?: boolean;
+    status?: any;
+    json?: any;
+  }
   interface NextFunction { (err?: any): void; }
 }
 declare module "express" {
   function express(): any;
-  namespace express {}
+  namespace express {
+    function json(options?: any): any;
+    function urlencoded(options?: any): any;
+  }
   export = express;
   export type { Request, Response, NextFunction };
 }
@@ -33,6 +43,14 @@ declare module "@replit/vite-plugin-dev-banner";
 declare module "nanoid";
 declare module "express-session";
 declare module "passport";
+declare module "serverless-http";
+declare module "react";
+declare module "react-dom";
+declare module "lucide-react";
+declare module "framer-motion";
+declare module "react-markdown";
+declare module "date-fns";
+declare module "@/lib/utils";
 
 declare module "react";
 declare module "react-dom";

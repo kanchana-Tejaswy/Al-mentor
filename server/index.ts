@@ -78,7 +78,9 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (process.env.NODE_ENV === "production") {
+  // when deployed to Netlify we serve static assets directly via the
+  // platform so the function should not try to mount them itself.
+  if (process.env.NODE_ENV === "production" && !process.env.NETLIFY) {
     serveStatic(app);
   } else {
     const { setupVite } = await import("./vite");
